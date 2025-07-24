@@ -254,7 +254,18 @@ def delete_feedback(feedback_id):
     flash("Feedback deleted.", "info")
     return redirect(url_for('moderate_feedback'))
 
+# NEW: Admin-only route to initialize DB
+@app.route('/initdb')
+@login_required
+def init_db():
+    if current_user.role == 'admin':
+        db.create_all()
+        flash("Database initialized successfully!", "success")
+    else:
+        flash("Access denied. Admin only.", "danger")
+    return redirect(url_for('home'))
+
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        db.create_all()  # ensures tables are created without wiping old data
     app.run(debug=True)
