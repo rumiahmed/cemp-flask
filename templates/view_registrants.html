@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}View Registrants{% endblock %}
+{% block content %}
+<h2 class="mb-4">Registrants for "{{ event.title }}"</h2>
+
+<ul class="list-group">
+  {% for reg in registrations %}
+    <li class="list-group-item">
+      {{ reg.user.username }} ({{ reg.user.email }})
+    </li>
+  {% else %}
+    <li class="list-group-item">No one has registered yet.</li>
+  {% endfor %}
+</ul>
+
+<a href="{{ url_for('my_events') }}" class="btn btn-secondary mt-3">⬅ Back to My Events</a>
+{% endblock %}

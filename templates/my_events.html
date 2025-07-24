@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}My Events{% endblock %}
+
+{% block content %}
+<h1 class="text-primary mb-4">My Events Dashboard</h1>
+{% if event_data %}
+  <div class="row">
+    {% for item in event_data %}
+      <div class="col-md-6">
+        <div class="card mb-4 shadow-sm">
+          {% if item.event.event_date < current_date %}
+            <div class="card-header bg-secondary text-white">
+              <strong>{{ item.event.title }} (Completed)</strong>
+            </div>
+          {% else %}
+            <div class="card-header bg-primary text-white">
+              <strong>{{ item.event.title }}</strong>
+            </div>
+          {% endif %}
+          <div class="card-body">
+            <p><strong>Date:</strong> {{ item.event.event_date.strftime('%B %d, %Y') }} <strong>Time:</strong> {{ item.event.event_time.strftime('%I:%M %p') }}</p>
+            <p><strong>Location:</strong> {{ item.event.location }}</p>
+            <p><strong>Description:</strong> {{ item.event.description }}</p>
+            {% if item.event.category %}
+              <p><strong>Category:</strong> {{ item.event.category.name }}</p>
+            {% endif %}
+            <p><strong>Registrants:</strong> {{ item.registrants }}</p>
+            <p><strong>Feedback Received:</strong> {{ item.feedbacks|length }}</p>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{{ url_for('view_registrants', event_id=item.event.id) }}" class="btn btn-outline-info btn-sm">👥 View Registrants</a>
+              {% if item.event.event_date <= current_date %}
+                <a href="{{ url_for('view_feedback', event_id=item.event.id) }}" class="btn btn-outline-success btn-sm">🗒 View Feedback</a>
+              {% endif %}
+              <a href="{{ url_for('edit_event', event_id=item.event.id) }}" class="btn btn-outline-warning btn-sm">✏️ Edit</a>
+              <form method="POST" action="{{ url_for('delete_event', event_id=item.event.id) }}" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm">🗑 Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted">You have not created any events yet.</p>
+{% endif %}
+{% endblock %}

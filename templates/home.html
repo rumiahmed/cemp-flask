@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h2 class="mb-4">🏠 Welcome to CEMP (Campus Event Management Portal)</h2>
+
+<form method="get" action="{{ url_for('home') }}" class="row g-3 mb-4">
+  <div class="col-md-6">
+    <input type="text" class="form-control" name="search" placeholder="Search events..." value="{{ request.args.get('search', '') }}">
+  </div>
+  <div class="col-md-4">
+    <select name="category" class="form-select">
+      <option value="">All Categories</option>
+      {% for category in categories %}
+      <option value="{{ category.id }}" {% if request.args.get('category') == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">🔍 Search</button>
+  </div>
+</form>
+
+<div class="row">
+  {% for event in events %}
+  <div class="col-md-6">
+    <div class="card mb-4 shadow rounded">
+      <div class="card-body">
+        <h5 class="card-title">{{ event.title }}</h5>
+        <p class="card-text">{{ event.description }}</p>
+        <p><strong>Date:</strong> {{ event.event_date }} <strong>Time:</strong> {{ event.event_time.strftime('%H:%M') }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+        {% if event.category %}<p><strong>Category:</strong> {{ event.category.name }}</p>{% endif %}
+        {% if current_user.id == event.organizer_id %}
+        <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+        <form method="POST" action="{{ url_for('delete_event', event_id=event.id) }}" style="display:inline;">
+          <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{{ url_for('register_event', event_id=event.id) }}" style="display:inline;">
+          <button type="submit" class="btn btn-success btn-sm">✅ Register</button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('give_feedback', event_id=event.id) }}" class="btn btn-secondary btn-sm">📝 Feedback</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12">
+    <div class="alert alert-info">No events found.</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">📊 Event Statistics by Category</h2>
+
+<canvas id="categoryChart" width="400" height="200"></canvas>
+
+<script>
+  const ctx = document.getElementById('categoryChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_data | map(attribute='category') | list | tojson }},
+      datasets: [{
+        label: 'Number of Events',
+        data: {{ chart_data | map(attribute='count') | list | tojson }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          precision: 0
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Moderate Feedbacks{% endblock %}
+{% block content %}
+<h2 class="mb-4">Feedback Moderation Panel</h2>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Event</th>
+      <th>User</th>
+      <th>Comment</th>
+      <th>Rating</th>
+      <th>Submitted</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for fb in feedbacks %}
+    <tr>
+      <td>{{ fb.event.title }}</td>
+      <td>{{ fb.user.username }}</td>
+      <td>{{ fb.comment }}</td>
+      <td>{{ fb.rating if fb.rating else 'N/A' }}</td>
+      <td>{{ fb.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('delete_feedback', feedback_id=fb.id) }}">
+          <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this feedback?')">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

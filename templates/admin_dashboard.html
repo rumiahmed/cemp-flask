@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<ul class="list-group">
+    <li class="list-group-item">Total Users: {{ users|length }}</li>
+    <li class="list-group-item">Total Events: {{ events|length }}</li>
+</ul>
+{% endblock %}
