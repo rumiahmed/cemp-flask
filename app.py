@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cemp.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your-very-secret-key'
 
-CEMP_FULL_NAME = "Campus Event Management Portal"
+CEMP_FULL_NAME = "Community Event Management Portal"
 
 db.init_app(app)
 
